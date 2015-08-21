@@ -9,6 +9,7 @@
     
     echo $this->form()->openTag($form);
     echo $this->formHidden($form->get('id'));
+    echo $this->formHidden($form->get('OP'));
     echo $this->formRow($form->get('title'));
     //echo $this->formRow( <---type first post somehow
     echo $this->formSubmit($form->get('submit'));

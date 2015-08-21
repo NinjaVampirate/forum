@@ -1,7 +1,29 @@
 <p> Testing thread <?php echo $thread->id ?></p>
 
+<ol>
+<?php foreach ($posts as $post) : ?>
+    <li><?php echo $post->content; ?></li>
+<?php endforeach ?>
+</ol>
 <?php
-//$db = 'thread' . $thread->id;
-//$sql = 'SELECT * FROM ' . $db;
+
+$form->setAttribute('action', $this->url('thread', array('id' => $thread->id)));
+$form->prepare();
+
+echo $this->form()->openTag($form);
+echo $this->formHidden($form->get('thread_id'));
+echo $this->formHidden($form->get('post_id'));
+echo $this->formHidden($form->get('user'));
+echo $this->formRow($form->get('content'));
+echo $this->formSubmit($form->get('submit'));
+echo $this->form()->closeTag();
+
+
+
+/*<form method="post">
+<div>
+    <textarea name="content"></textarea>
+    <input type="submit" name="reply" value="Post" />
+</div>*/
 ?>
 <a href="/skelApp/public/forum">Return</a>

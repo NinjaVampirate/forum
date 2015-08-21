@@ -30,21 +30,11 @@ use Zend\Db\TableGateway\TableGateway;
             return $row;
         }
         
-        public function getThreadTitle($title)
-        {
-         //   $id  = (int) $id;
-            $rowset = $this->tableGateway->select(array('title' => $title));
-            $row = $rowset->current();
-            if (!$row) {
-                throw new \Exception("Could not find thread $title");
-            }
-            return $row;
-        }
-        
         public function createThread(Thread $thread)
         {
             $data = array(
                           'title' => $thread->title,
+                          'OP' => "anonymous",
                           );
 
             $id = (int) $thread->id;
@@ -67,4 +57,5 @@ use Zend\Db\TableGateway\TableGateway;
         {
             $this->tableGateway->delete(array('id' => (int) $id));
         }
+        
     }

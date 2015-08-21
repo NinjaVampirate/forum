@@ -7,15 +7,19 @@
 
 <table class="table">
 <tr>
-    <th>&nbsp</th>
+    <th>ID</th>
     <th>Thread</th>
+    <th>Posted by:</th>
+    <th>&nbsp</th>
 </tr>
 <?php foreach ($threadlist as $thread) : ?>
 <tr>
     <td><?php echo $thread->id; ?></td>
     <td><a href="<?php echo 'forum/thread/'.$thread->id ?>"><?php echo $thread->title; ?></a></td>
+    <td><?php echo $thread->OP; ?></td>
     <td><a href="<?php echo 'forum/delete/'.$thread->id ?>">Delete</a></td>
 </tr>
 <?php endforeach ?>
 </table>
-<a href="forum/add">Create a thread</a>
+<div><a href="forum/add">Create a thread</a></div>
+<div><a href="forum/clear">Delete all threads</a></div>

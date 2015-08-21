@@ -5,6 +5,8 @@ use Zend\ModuleManager\Feature\AutoloaderProviderInterface;
 use Zend\ModuleManager\Feature\ConfigProviderInterface;
 use Forum\Model\Thread;
 use Forum\Model\ThreadList;
+use Forum\Model\Post;
+use Forum\Model\PostList;
 use Zend\Db\ResultSet\ResultSet;
 use Zend\Db\TableGateway\TableGateway;
 
@@ -44,6 +46,19 @@ class Module implements AutoloaderProviderInterface, ConfigProviderInterface
                                           $resultSetPrototype->setArrayObjectPrototype(new Thread());
                                           return new TableGateway('forum', $dbAdapter, null, $resultSetPrototype);
                                           },
+                                          
+                                          'Forum\Model\PostList' =>  function($sm) {
+                                          $tableGateway = $sm->get('PostListGateway');
+                                          $table = new PostList($tableGateway);
+                                          return $table;
+                                          },
+                                          'PostListGateway' => function ($sm) {
+                                          $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                                          $resultSetPrototype = new ResultSet();
+                                          $resultSetPrototype->setArrayObjectPrototype(new Post());
+                                          return new TableGateway('posts', $dbAdapter, null, $resultSetPrototype);
+                                          },
+                                          
                                           ),
                      );
     }
