@@ -4,6 +4,7 @@ return array(
      'controllers' => array(
             'invokables' => array(
                   'Forum\Controller\Forum' => 'Forum\Controller\ForumController',
+                  'Forum\Controller\User' => 'Forum\Controller\UserController',
                   ),
             ),
              
@@ -18,23 +19,38 @@ return array(
                                      'controller' => 'Forum\Controller\Forum',
                                      'action'     => 'index',
                                      ),
-                              ),
+                        ),
        ),
                              'thread' => array(
-                                               'type' => 'segment',
-                                               'options' => array(
-                                                                  'route'    => '/forum/thread/:id',
-                                                                  'defaults' => array(
-                                                                                      'controller' => 'Forum\Controller\Forum',
-                                                                                      'action' => 'thread'
-                                                                                      ),
-                                                                  ),
+                                   'type' => 'segment',
+                                   'options' => array(
+                                          'route'    => '/forum/thread/:id',
+                                          'defaults' => array(
+                                                      'controller' => 'Forum\Controller\Forum',
+                                                      'action' => 'thread'
+                                                      ),
+                                           ),
 
-),),),
+                                ),
+                             'user' => array(
+                                    'type' => 'segment',
+                                    'options' => array(
+                                                'route' => '/user[/:action]',
+                                                       'defaults' => array(
+                                                                           'controller' => 'Forum\Controller\User',
+                                                                           //'action'     => 'index',
+                                                                            ),
+                                                       ),
+                             
+                             
+                                             ),
+                             ),
+                    ),
              
      'view_manager' => array(
              'template_path_stack' => array(
                   'forum' => __DIR__ . '/../view',
+                  'user' => __DIR__ . '/../view',
                   ),
              ),
      );

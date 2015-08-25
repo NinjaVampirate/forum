@@ -22,6 +22,7 @@ class ForumController extends AbstractActionController
     // Add a thread
     public function addAction()
     {
+        // create thread and set title
         $form = new ThreadForm();
         $form->get('submit')->setValue('Create new thread');
         
@@ -32,18 +33,15 @@ class ForumController extends AbstractActionController
             $form->setData($request->getPost());
             
             if($form->isValid()){
-                // create the thread
                 $thread->exchangeArray($form->getData());
                 $this->getThreadList()->createThread($thread);
-                // connect to database
+                // to get the max id
                 $conn = mysqli_connect('localhost', 'root', 'root', 'scotchbox');
                 if ($conn->connect_error) { die("Connection failed: " . $conn->connect_error) . ".<br>"; }
                 else { echo "Connection successful.<br>"; }
-                // get max id
                 $result = mysqli_query($conn, "SELECT MAX(id) FROM forum");
                 $row = mysqli_fetch_row($result);
                 $max_id = $row[0];
-                // redirect to new thread
                 return $this->redirect()->toRoute('thread', array('id' => $max_id));
             }
         }
@@ -73,37 +71,14 @@ class ForumController extends AbstractActionController
             if($form->isValid()){
                 $post->exchangeArray($form->getData());
                 $this->getPostList()->createPost($post, $id);
+                // next line needed or text stays in box - must be better way?
                 return $this->redirect()->toRoute('thread', array('id' => $id));
         
-        /*    echo "Request successful <br>";
-            $post = $request->getPost('post', null);
-          //  if($post == 'Post'){
-                echo "Attempting to connect to database... ";
-                $conn = mysqli_connect('localhost', 'root', 'root', 'scotchbox');
-                // Check connection
-                if ($conn->connect_error) { die("Connection failed: " . $conn->connect_error) . ".<br>"; }
-                else { echo "Connection successful.<br>"; }
-            
-                echo "Attempting to post reply <br>";
-                $sql = 'INSERT INTO posts(thread_id, content, user) '
-                . 'VALUES ($id, $_POST["reply"], "anonymous")';
-                
-                if ($conn->query($sql) === TRUE) { echo "Post successful.<br>"; }
-                else {
-                    echo "Error creating post: " . $conn->error . ".<br>";
-              //  }*/
             }
         }
-       /* return new ViewModel(array(
-                                   'thread' => $this->getThreadList()->getThread($id),
-                                   'posts' => $this->getPostList()->fetchAll(),
-                                   'form' => $form,
-                                   ));*/
-        
-        
         return array(
                                    'thread' => $this->getThreadList()->getThread($id),
-                                    'posts' => $this->getPostList()->fetchAll(),
+                                    'posts' => $this->getPostList()->getThreadPosts($id),
                                     'form' => $form,
                                     );
     }
@@ -153,7 +128,7 @@ class ForumController extends AbstractActionController
         return new viewModel();
     }
     
-    // Create forum table in database
+    // Create forum/posts tables in database
     public function createAction()
     {
         // connect to database

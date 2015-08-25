@@ -1,0 +1,91 @@
+<h2>Login</h2>
+
+<?php
+    session_start();
+    // if signed in, let user sign out
+    if(isset($_SESSION['signed_in']) && $_SESSION['signed_in'] == true)
+    {
+        echo 'You are already signed in, click <a href="/skelApp/public/user/logout">here</a> to sign out.';
+    }
+    else    // if not signed in
+    {
+        if($_SERVER['REQUEST_METHOD'] != 'POST')    // if haven't entered data,
+        {                                           // show the login form
+            echo $this->form()->openTag($form);
+            echo $this->formHidden($form->get('user_id'));
+            echo $this->formHidden($form->get('level'));
+            echo $this->formRow($form->get('username'));
+            echo "<br>";
+            echo $this->formRow($form->get('password'));
+            echo "<br>";
+            echo $this->formSubmit($form->get('submit'));
+            echo $this->form()->closeTag();
+        }
+        else    // check for errors
+        {
+            $errors = array();
+            if(!isset($_POST['username']))
+            {
+                $errors[] = 'The username field must not be empty.';
+            }
+            
+            if(!isset($_POST['password']))
+            {
+                $errors[] = 'The password field must not be empty.';
+            }
+            if(!empty($errors)) // if not empty, errors exist
+            {
+                echo '<ul>';
+                foreach($errors as $key => $value)  //output each error in a list
+                {
+                    echo '<li>' . $value . '</li>';
+                }
+                echo '</ul>';
+            }
+            else    // if no errors, get the user/password/level
+            {
+                echo "Attempting to connect to database... ";
+                $conn = mysqli_connect('localhost', 'root', 'root', 'scotchbox');
+                // Check connection
+                if ($conn->connect_error) { die("Connection failed: " . $conn->connect_error) . ".<br>"; }
+                else { echo "Connection successful.<br>"; }
+            
+                $sql = "SELECT username, password, user_id, level FROM users WHERE username='" . mysqli_real_escape_string($conn, $_POST['username'])
+                . "' AND password='" . mysqli_real_escape_string($conn, $_POST['password']) ."'";
+                
+                $result = $conn->query($sql);
+    
+                if(!$result)
+                {
+                    echo 'Error: ' . $conn->error . '.<br>';
+                    echo 'Attempted query: '. $sql .'<br>';
+                }
+                else
+                {
+                    //the query was successfully executed, there are 2 possibilities
+                    //1. the query returned data, the user can be signed in
+                    //2. the query returned an empty result set, the credentials were wrong
+                    if(mysqli_num_rows($result) == 0)
+                    {
+                        echo 'Wrong username/password - please try again.';
+                    }
+                    else
+                    {
+                        //set the $_SESSION['signed_in'] variable to TRUE
+                        $_SESSION['signed_in'] = true;
+                        
+                        //we also put the user_id and user_name values in the $_SESSION, so we can use it at various pages
+                        while($row = mysqli_fetch_assoc($result))
+                        {
+                            $_SESSION['user_id']  = $row['user_id'];
+                            $_SESSION['username']  = $row['username'];
+                            $_SESSION['level'] = $row['level'];
+                        }
+                        
+                        echo 'Welcome, ' . $_SESSION['username'] . '. <a href="/skelApp/public/forum/index">Proceed to the forum overview</a>.';
+                    }
+                }
+            }
+        }
+    }
+    

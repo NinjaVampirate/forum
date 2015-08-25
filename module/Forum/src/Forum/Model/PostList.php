@@ -38,21 +38,22 @@
         
         public function createPost(Post $post, $thread_id)
         {
+            session_start();
             $data = array(
                           'thread_id' => $thread_id,
                           'content' => $post->content,
-                          'user' => "anonymous",
+                          'user' => $_SESSION['username'],
                           );
             
-            $post_id = (int) $post->post_id;
+            $id = (int) $post->post_id;
             
-            if ($post_id == 0) {
+            if ($id == 0) {
                 $this->tableGateway->insert($data);
             }
             
             else {
-                if ($this->getPost($post_id)) {
-                    $this->tableGateway->update($data, array('post_id' => $post_id));
+                if ($this->getPost($id)) {
+                    $this->tableGateway->update($data, array('post_id' => $id));
                 }
                 else {
                     throw new \Exception('Post id does not exist');

@@ -4,6 +4,7 @@
 ?>
 <h2><?php echo $this->escapeHtml($title); ?></h2>
 <?php
+    //session_start();
     $form->setAttribute('action', $this->url('forum', array('action' => 'add')));
     $form->prepare();
     

@@ -32,9 +32,10 @@ use Zend\Db\TableGateway\TableGateway;
         
         public function createThread(Thread $thread)
         {
+            session_start();
             $data = array(
                           'title' => $thread->title,
-                          'OP' => "anonymous",
+                          'OP' => $_SESSION['username'],
                           );
 
             $id = (int) $thread->id;

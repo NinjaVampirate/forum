@@ -1,0 +1,20 @@
+<h2> Register </h2>
+
+<?php if($_SERVER['REQUEST_METHOD'] != 'POST')
+{
+        $form->setAttribute('action', $this->url('user', array('action' => 'register')));
+        $form->prepare();
+        
+        echo $this->form()->openTag($form);
+        echo $this->formHidden($form->get('user_id'));
+        echo $this->formHidden($form->get('level'));
+        echo $this->formRow($form->get('username'));
+        echo "<br>";
+        echo $this->formRow($form->get('password'));
+        echo "<br>";
+        echo $this->formSubmit($form->get('submit'));
+        echo $this->form()->closeTag();
+    }
+    else{
+        echo "Registered!<br><a href='login'>Sign in</a>";
+    }

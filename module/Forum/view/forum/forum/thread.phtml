@@ -1,29 +1,25 @@
-<p> Testing thread <?php echo $thread->id ?></p>
+<h3><?php echo $thread->title ?></h3>
 
-<ol>
-<?php foreach ($posts as $post) : ?>
-    <li><?php echo $post->content; ?></li>
-<?php endforeach ?>
-</ol>
-<?php
+<ol><?php foreach ($posts as $post) : ?>
+    <li><div class="post">
+        <h5>Posted by: <?php echo $post->user ?></h1>
+        <p><?php echo $post->content; ?></p>
+    </div></li>
+<?php endforeach ?></ol>
 
-$form->setAttribute('action', $this->url('thread', array('id' => $thread->id)));
-$form->prepare();
+<div class="reply">
+    <?php
+        $form->setAttribute('action', $this->url('thread', array('id' => $thread->id)));
+        $form->prepare();
 
-echo $this->form()->openTag($form);
-echo $this->formHidden($form->get('thread_id'));
-echo $this->formHidden($form->get('post_id'));
-echo $this->formHidden($form->get('user'));
-echo $this->formRow($form->get('content'));
-echo $this->formSubmit($form->get('submit'));
-echo $this->form()->closeTag();
-
-
-
-/*<form method="post">
-<div>
-    <textarea name="content"></textarea>
-    <input type="submit" name="reply" value="Post" />
-</div>*/
-?>
+        echo $this->form()->openTag($form);
+        echo $this->formHidden($form->get('thread_id'));
+        echo $this->formHidden($form->get('post_id'));
+        echo $this->formHidden($form->get('user'));
+        echo $this->formRow($form->get('content'));
+        echo "<br><br>";
+        echo $this->formSubmit($form->get('submit'));
+        echo $this->form()->closeTag();
+    ?>
+</div>
 <a href="/skelApp/public/forum">Return</a>

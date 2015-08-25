@@ -5,21 +5,37 @@
 
 <h2><?php echo $this->escapeHtml($title); ?></h2>
 
+<?php
+    session_start();
+    if(isset($_SESSION['signed_in']) && $_SESSION['signed_in'] == true)
+    {
+        echo 'You are signed in as ' . $_SESSION['username'] . ' - <a href="/skelApp/public/user/logout">Sign out</a>';
+    }
+    else
+    {
+        echo 'You are not signed in - <a href=/skelApp/public/user/login>Sign in</a> or <a href=/skelApp/public/user/register>register</a>.';
+    }
+?>
+
 <table class="table">
 <tr>
     <th>ID</th>
     <th>Thread</th>
     <th>Posted by:</th>
-    <th>&nbsp</th>
+    <!-- <th>&nbsp</th> -->
 </tr>
 <?php foreach ($threadlist as $thread) : ?>
 <tr>
     <td><?php echo $thread->id; ?></td>
-    <td><a href="<?php echo 'forum/thread/'.$thread->id ?>"><?php echo $thread->title; ?></a></td>
+    <td><a href="<?php echo '/skelApp/public/forum/thread/'.$thread->id ?>"><?php echo $thread->title; ?></a></td>
     <td><?php echo $thread->OP; ?></td>
-    <td><a href="<?php echo 'forum/delete/'.$thread->id ?>">Delete</a></td>
+    <!-- <td><a href="<?php echo '/skelApp/public/forum/delete/'.$thread->id ?>">Delete</a></td> -->
 </tr>
 <?php endforeach ?>
 </table>
-<div><a href="forum/add">Create a thread</a></div>
-<div><a href="forum/clear">Delete all threads</a></div>
+
+<?php
+    if(isset($_SESSION['signed_in']) && $_SESSION['signed_in'] == true)
+    {
+        echo '<div><a href="/skelApp/public/forum/add">Create a thread</a></div>';
+    }
