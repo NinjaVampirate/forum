@@ -1,4 +1,6 @@
-<h3><?php echo $thread->title ?></h3>
+<h3><?php
+    session_start();
+    echo $thread->title ?></h3>
 
 <ol><?php foreach ($posts as $post) : ?>
     <li><div class="post">
@@ -7,8 +9,9 @@
     </div></li>
 <?php endforeach ?></ol>
 
-<div class="reply">
-    <?php
+<div class="reply"> <?php
+    if(isset($_SESSION['signed_in']) && $_SESSION['signed_in'] == true)
+    {
         $form->setAttribute('action', $this->url('thread', array('id' => $thread->id)));
         $form->prepare();
 
@@ -20,6 +23,10 @@
         echo "<br><br>";
         echo $this->formSubmit($form->get('submit'));
         echo $this->form()->closeTag();
-    ?>
-</div>
+    }
+    else
+    {
+        echo "You must be signed in to post a reply. <a href=/skelApp/public/user/login>Sign in</a> or <a href=/skelApp/public/user/register>register</a>.";
+    }
+?></div>
 <a href="/skelApp/public/forum">Return</a>
